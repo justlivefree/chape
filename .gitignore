@@ -1,0 +1,8 @@
+.venv
+.idea
+locales
+policy
+tests
+.env
+*.pyc
+__pycache__
