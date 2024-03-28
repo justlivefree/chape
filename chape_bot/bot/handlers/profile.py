@@ -1,27 +1,25 @@
 from typing import Dict
 
-from aiogram import Router, F, Bot
+from aiogram import F, Bot, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.utils.i18n import gettext as _
 
-from database.orm import UserQuery
-from ..config import words, i18n
+from chape_bot.database.orm import UserQuery
+from ..configs import words
 from ..keyboards.base import cancel_kb, langs_kb, main_menu, location_kb, yes_no_kb, activate_kb
 from ..keyboards.profile import profile
 from ..keyboards.signup import interests_panel
-from ..middlewares import LangMiddleware, MediaGroupMiddleware
+from ..middlewares import MediaGroupMiddleware, i18n_middleware, media_middleware
 from ..states import UserPanel, ProfileSettings
 from ..utils import get_location_data
 
-profile_panel = Router(name='user_panel_router')
-i18n_middleware = LangMiddleware(i18n=i18n)
-profile_panel.message.middleware(i18n_middleware)
-profile_panel.callback_query.middleware(i18n_middleware)
-profile_panel.message.middleware(MediaGroupMiddleware())
+router = Router()
+
+router.message.middleware(media_middleware)
 
 
-@profile_panel.message(UserPanel.profile)
+@router.message(UserPanel.profile)
 async def profile_menu(message: Message, state: FSMContext, bot: Bot):
     data = message.text
     if data == _(words.profile.change_name):
@@ -62,7 +60,7 @@ async def profile_menu(message: Message, state: FSMContext, bot: Bot):
         await message.answer(_(words.main_panel.title), reply_markup=main_menu())
 
 
-@profile_panel.message(ProfileSettings.change_name, F.text)
+@router.message(ProfileSettings.change_name, F.text)
 async def change_name(message: Message, state: FSMContext):
     text = _(words.main_panel.profile)
     if message.text != _(words.cancel):
@@ -72,7 +70,7 @@ async def change_name(message: Message, state: FSMContext):
     await state.set_state(UserPanel.profile)
 
 
-@profile_panel.message(ProfileSettings.change_bio, F.text)
+@router.message(ProfileSettings.change_bio, F.text)
 async def change_bio(message: Message, state: FSMContext):
     text = _(words.main_panel.profile)
     if message.text != _(words.cancel):
@@ -82,14 +80,14 @@ async def change_bio(message: Message, state: FSMContext):
     await state.set_state(UserPanel.profile)
 
 
-@profile_panel.message(ProfileSettings.change_media, ~F.media_group_id & ~F.text)
+@router.message(ProfileSettings.change_media, ~F.media_group_id & ~F.text)
 async def change_media(message: Message, state: FSMContext, media: Dict):
     await UserQuery.update_media(**media)
     await state.set_state(UserPanel.profile)
     await message.answer('✅', reply_markup=profile())
 
 
-@profile_panel.message(ProfileSettings.change_media, F.media_group_id)
+@router.message(ProfileSettings.change_media, F.media_group_id)
 async def change_media_group(message: Message, state: FSMContext, media_group: Dict):
     if media_group['media']:
         del MediaGroupMiddleware.media_groups[message.media_group_id]
@@ -98,14 +96,14 @@ async def change_media_group(message: Message, state: FSMContext, media_group: D
         await message.answer('✅', reply_markup=profile())
 
 
-@profile_panel.message(ProfileSettings.change_media, F.text)
+@router.message(ProfileSettings.change_media, F.text)
 async def change_media_cancel(message: Message, state: FSMContext):
     if message.text == _(words.cancel):
         await state.set_state(UserPanel.profile)
         await message.answer(_(words.main_panel.profile), reply_markup=profile())
 
 
-@profile_panel.message(ProfileSettings.change_loc, F.location)
+@router.message(ProfileSettings.change_loc, F.location)
 async def change_location(message: Message, state: FSMContext):
     lat, lon = message.location.latitude, message.location.longitude
     loc = await get_location_data(lat, lon)
@@ -115,18 +113,18 @@ async def change_location(message: Message, state: FSMContext):
     await message.answer('✅', reply_markup=profile())
 
 
-@profile_panel.message(ProfileSettings.change_loc, F.text)
+@router.message(ProfileSettings.change_loc, F.text)
 async def change_location_cancel(message: Message, state: FSMContext):
     if message.text == _(words.cancel):
         await state.set_state(UserPanel.profile)
         await message.answer(_(words.main_panel.profile), reply_markup=profile())
 
 
-@profile_panel.callback_query(ProfileSettings.change_lang, F.data.in_({'en', 'ru', 'uz', 'cancel'}))
+@router.callback_query(ProfileSettings.change_lang)
 async def change_lang(callback: CallbackQuery, state: FSMContext, bot: Bot):
     text = _(words.main_panel.profile)
     if callback.data != 'cancel':
-        await UserQuery.update(callback.message.from_user.id, lang=callback.data)
+        await UserQuery.update(callback.from_user.id, lang=callback.data)
         await i18n_middleware.set_locale(state, callback.data)
         await callback.answer()
         text = '✅'
@@ -135,7 +133,7 @@ async def change_lang(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await callback.message.answer(text, reply_markup=profile())
 
 
-@profile_panel.callback_query(ProfileSettings.change_interests)
+@router.callback_query(ProfileSettings.change_interests)
 async def change_interests(callback: CallbackQuery, state: FSMContext, bot: Bot):
     data = await state.get_data()
     interests = data.pop('interests')
@@ -154,7 +152,7 @@ async def change_interests(callback: CallbackQuery, state: FSMContext, bot: Bot)
     await callback.answer()
 
 
-@profile_panel.message()
+@router.message(ProfileSettings.deactivate)
 async def deactivate_user(message: Message, state: FSMContext):
     if message.text == _(words.yes):
         await UserQuery.deactivate_user(message.from_user.id)

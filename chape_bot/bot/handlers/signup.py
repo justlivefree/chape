@@ -1,87 +1,80 @@
 from typing import Dict
 
-from aiogram import Bot, F
-from aiogram import Router
+from aiogram import Bot, F, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
-from aiogram.utils.i18n import gettext as _, FSMI18nMiddleware
+from aiogram.utils.i18n import gettext as _
 
-from database.orm import UserQuery
-from ..config import i18n, words
-from ..keyboards.base import main_menu, location_kb
+from chape_bot.database.models import Gender
+from chape_bot.database.orm import UserQuery
+from ..configs import words
+from ..keyboards.base import main_menu, location_kb, agree_disagree
 from ..keyboards.signup import interests_panel
-from ..middlewares import MediaGroupMiddleware
+from ..middlewares import MediaGroupMiddleware, media_middleware, i18n_middleware
 from ..states import SignupState, UserPanel
 from ..utils import get_location_data
 
-signup_router = Router()
-i18n_middleware = FSMI18nMiddleware(i18n=i18n, key='lang')
-signup_router.message.middleware(MediaGroupMiddleware())
-signup_router.callback_query.middleware(i18n_middleware)
-signup_router.message.middleware(i18n_middleware)
+router = Router()
+router.message.middleware(media_middleware)
 
 
-@signup_router.callback_query(SignupState.lang)
+@router.callback_query(SignupState.lang)
 async def start_signup(callback: CallbackQuery, state: FSMContext, bot: Bot):
     await i18n_middleware.set_locale(state, callback.data)
-    await state.update_data(locale=callback.data)
-    rmk = ReplyKeyboardMarkup(resize_keyboard=True,
-                              keyboard=[
-                                  [KeyboardButton(text=_(words.signup.agree))],
-                                  [KeyboardButton(text=_(words.signup.disagree))]
-                              ])
+    await state.update_data(locale=callback.from_user.language_code, lang=callback.data)
     await bot.delete_message(callback.message.chat.id, callback.message.message_id)
     await state.set_state(SignupState.policy)
-    await callback.message.answer(_(words.policy), reply_markup=rmk)
+    await callback.message.answer(_(words.policy), reply_markup=agree_disagree())
 
 
-@signup_router.message(SignupState.policy)
+@router.message(SignupState.policy, F.text)
 async def get_agreement(message: Message, state: FSMContext):
     if message.text == _(words.signup.agree):
         await state.set_state(SignupState.fullname)
-        await message.reply(_(words.signup.name), reply_markup=ReplyKeyboardRemove())
+        await message.answer(_(words.signup.name), reply_markup=ReplyKeyboardRemove())
     elif message.text == _(words.signup.disagree):
         await state.clear()
     else:
         await message.delete()
 
 
-@signup_router.message(SignupState.fullname)
+@router.message(SignupState.fullname, F.text)
 async def get_fullname(message: Message, state: FSMContext):
     await state.update_data(fullname=message.text)
     await state.set_state(SignupState.age)
     await message.answer(_(words.signup.age))
 
 
-@signup_router.message(SignupState.age)
+@router.message(SignupState.age, F.text.isnumeric())
 async def get_age(message: Message, state: FSMContext):
-    try:
-        age = int(message.text)
-        if 15 <= age <= 25:
-            await state.update_data(age=age)
-            await state.set_state(SignupState.gender)
-            rkm = ReplyKeyboardMarkup(resize_keyboard=True,
-                                      keyboard=[[KeyboardButton(text=_(words.signup.gender.male)),
-                                                 KeyboardButton(text=_(words.signup.gender.female))]])
-            await message.answer(_(words.signup.gender.title), reply_markup=rkm)
-        else:
-            await message.answer(_(words.errors.age_range))
-    except ValueError:
-        await message.answer(_(words.errors.type_number))
+    age = int(message.text)
+    if age >= 17:
+        await state.update_data(age=age)
+        await state.set_state(SignupState.gender)
+        rkm = ReplyKeyboardMarkup(resize_keyboard=True,
+                                  keyboard=[[KeyboardButton(text=_(words.signup.gender.male)),
+                                             KeyboardButton(text=_(words.signup.gender.female))]])
+        await message.answer(_(words.signup.gender.title), reply_markup=rkm)
+    else:
+        await message.answer(_(words.errors.age_range))
 
 
-@signup_router.message(SignupState.gender)
-async def get_gender(message: Message, state: FSMContext, bot: Bot):
-    f, m = map(_, (words.signup.gender.male, words.signup.gender.female))
-    if message.text in (f, m):
-        await state.update_data(gender=(message.text == m), interests=words.interests)
-        await state.set_state(SignupState.interest)
-        await message.answer(_(words.signup.info_choice), reply_markup=ReplyKeyboardRemove())
-        await message.answer(_(words.signup.choose), reply_markup=interests_panel(words.interests))
+@router.message(SignupState.gender, F.text)
+async def get_gender(message: Message, state: FSMContext):
+    if message.text == _(words.signup.gender.male):
+        gender = Gender.male.value
+    elif message.text == _(words.signup.gender.female):
+        gender = Gender.female.value
+    else:
+        return
+    await state.update_data(gender=gender, interests=words.interests)
+    await state.set_state(SignupState.interest)
+    await message.answer(_(words.signup.info_choice), reply_markup=ReplyKeyboardRemove())
+    await message.answer(_(words.signup.choose), reply_markup=interests_panel(words.interests))
 
 
-@signup_router.callback_query(SignupState.interest)
+@router.callback_query(SignupState.interest)
 async def get_interests(callback: CallbackQuery, state: FSMContext, bot: Bot):
     if callback.data == 'cancel':
         await state.set_state(SignupState.bio)
@@ -100,23 +93,23 @@ async def get_interests(callback: CallbackQuery, state: FSMContext, bot: Bot):
         pass
 
 
-@signup_router.message(SignupState.bio)
+@router.message(SignupState.bio, F.text)
 async def get_bio(message: Message, state: FSMContext):
     await state.update_data(description=message.text)
     await state.set_state(SignupState.city)
     await message.answer(_(words.signup.location), reply_markup=location_kb())
 
 
-@signup_router.message(SignupState.city, F.location)
+@router.message(F.location)
 async def get_location(message: Message, state: FSMContext):
     lat, lon = message.location.latitude, message.location.longitude
     loc = await get_location_data(lat, lon)
     await state.update_data(**{'lat': lat, 'lon': lon, 'city': loc['city'], 'country': loc['country']})
     await state.set_state(SignupState.media)
-    await message.answer(_(words.signup.media))
+    await message.answer(_(words.signup.media), reply_markup=ReplyKeyboardRemove())
 
 
-@signup_router.message(SignupState.media, ~F.media_group_id)
+@router.message(SignupState.media, ~F.media_group_id & (F.photo | F.video))
 async def get_media(message: Message, state: FSMContext, media: Dict):
     data = await state.get_data()
     await UserQuery.create_media(**media)
@@ -125,7 +118,7 @@ async def get_media(message: Message, state: FSMContext, media: Dict):
     await message.answer(_(words.welcome), reply_markup=main_menu())
 
 
-@signup_router.message(SignupState.media, F.media_group_id)
+@router.message(SignupState.media, F.media_group_id)
 async def get_media_group(message: Message, state: FSMContext, media_group: Dict):
     data = await state.get_data()
     if media_group['media']:

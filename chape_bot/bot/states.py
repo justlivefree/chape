@@ -30,5 +30,8 @@ class ProfileSettings(StatesGroup):
     deactivate = State()
 
 
-class Search(StatesGroup):
-    pass
+class SearchPanel(StatesGroup):
+    settings = State()
+    search = State()
+    message = State()
+    report = State()

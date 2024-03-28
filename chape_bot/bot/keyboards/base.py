@@ -2,7 +2,7 @@ from aiogram.types import KeyboardButton, InlineKeyboardMarkup, InlineKeyboardBu
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-from ..config import words
+from ..configs import words
 
 
 def main_menu():
@@ -13,9 +13,24 @@ def main_menu():
     return kmb.as_markup(resize_keyboard=True)
 
 
+def agree_disagree():
+    rmk = ReplyKeyboardMarkup(resize_keyboard=True,
+                              keyboard=[
+                                  [KeyboardButton(text=_(words.signup.agree))],
+                                  [KeyboardButton(text=_(words.signup.disagree))]
+                              ])
+    return rmk
+
+
 def cancel_kb():
     rkb = ReplyKeyboardBuilder()
     rkb.add(KeyboardButton(text=_(words.cancel)))
+    return rkb.as_markup(resize_keyboard=True)
+
+
+def back_kb():
+    rkb = ReplyKeyboardBuilder()
+    rkb.add(KeyboardButton(text=_(words.back)))
     return rkb.as_markup(resize_keyboard=True)
 
 

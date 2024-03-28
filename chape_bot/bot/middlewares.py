@@ -3,16 +3,37 @@ from typing import Callable, Dict, Any, Awaitable, Optional
 
 from aiogram import BaseMiddleware
 from aiogram.fsm.context import FSMContext
-from aiogram.types import Message, TelegramObject, CallbackQuery
-from aiogram.utils.i18n import FSMI18nMiddleware
+from aiogram.types import Message, TelegramObject
+from aiogram.utils.i18n import FSMI18nMiddleware, SimpleI18nMiddleware
 
-from database.orm import UserQuery
+from chape_bot.database.orm import UserQuery
+from .configs import i18n
 from .utils import media_maker
+
+
+class PrivateChatMiddleware(BaseMiddleware):
+    async def __call__(
+            self,
+            handler: Callable[[TelegramObject, Dict[str, Any]], Awaitable[Any]],
+            event: TelegramObject,
+            data: Dict[str, Any],
+    ) -> Any:
+        try:
+            chat_type = event.chat.type
+        except AttributeError:
+            chat_type = event.message.chat.type
+        except Exception:
+            return
+        if chat_type != 'private':
+            return
+        return await handler(event, data)
 
 
 class MediaGroupMiddleware(BaseMiddleware):
     media_groups = {}
-    latency = 0.2
+
+    def __init__(self, latency):
+        self.latency = latency
 
     async def __call__(
             self,
@@ -43,16 +64,19 @@ class LangMiddleware(FSMI18nMiddleware):
         if not locale:
             if isinstance(event, Message):
                 user_id = event.from_user.id
-            elif isinstance(event, CallbackQuery):
-                user_id = event.message.from_user.id
             else:
-                user_id = None
+                user_id = event.message.from_user.id
             user = await UserQuery.get_user(user_id)
             if user:
                 locale = user.lang
                 await self.set_locale(fsm_context, locale)
             else:
-                locale = await super().get_locale(event=event, data=data)
+                locale = await super(SimpleI18nMiddleware, self).get_locale(event=event, data=data)
                 if fsm_context:
                     await fsm_context.update_data(data={self.key: locale})
         return locale
+
+
+media_middleware = MediaGroupMiddleware(latency=0.5)
+i18n_middleware = LangMiddleware(i18n=i18n, key='lang')
+private_chat_middleware = PrivateChatMiddleware()

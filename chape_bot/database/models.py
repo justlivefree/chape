@@ -10,6 +10,11 @@ class Base(AsyncAttrs, DeclarativeBase):
     pass
 
 
+class Gender(enum.Enum):
+    male = 'male'
+    female = 'female'
+
+
 class ReportType(enum.Enum):
     sexual = 'sexual'
     pedophilia = 'pedophilia'
@@ -28,11 +33,11 @@ class User(Base, BaseModel):
 
     # ----
     tg_id = Column(BigInteger, unique=True)
-    chat_id = Column(BigInteger, unique=True)
+    username = Column(String(length=255), nullable=True)
     is_bot = Column(Boolean, default=False)
     fullname = Column(String(255))
     age = Column(SmallInteger)
-    gender = Column(Boolean)
+    gender = Column(Enum(Gender))
     description = Column(Text, nullable=True, default=None)
     interests = relationship('Interest', back_populates='user', uselist=False)
 
@@ -57,6 +62,9 @@ class User(Base, BaseModel):
     is_active = Column(Boolean, default=True)
     is_block = Column(Boolean, default=False)
     block_period = Column(DateTime, nullable=True)
+
+    def __str__(self):
+        return f'{self.id} {self.fullname}'
 
 
 class Interest(Base, BaseModel):
@@ -90,6 +98,7 @@ class Report(Base, BaseModel):
 
     sender_id = Column(ForeignKey('users.tg_id', ondelete='CASCADE'), nullable=True)
     receiver_id = Column(ForeignKey('users.tg_id', ondelete='CASCADE'), nullable=True)
-    report_type = Column(Enum(ReportType))
-    description = Column(Text, nullable=True, default=None)
-    is_read = Column(Boolean, default=True)
+    report_type = Column(Enum(ReportType), nullable=True)
+    description = Column(String(255), nullable=True)
+    audio_id = Column(String(255), nullable=True)
+    is_read = Column(Boolean, default=False)

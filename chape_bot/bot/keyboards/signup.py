@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardButton
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 from aiogram.utils.i18n import gettext as _
 
-from user_side.config import words
+from chape_bot.bot.configs import words
 
 
 def interests_panel(interests):

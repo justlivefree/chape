@@ -1,8 +1,9 @@
 .venv
 .idea
-locales
 policy
 tests
-.env
-*.pyc
+locales
 __pycache__
+.env
+*.mo
+*.pyc

@@ -1,5 +1,5 @@
 set_locales:
-	#mkdir "locales"
+	mkdir locales
 	pybabel extract --input-dirs . -o locales/chape_bot.pot
 set_lang:
 	pybabel init -i locales/chape_bot.pot -d locales -D chape_bot -l en
