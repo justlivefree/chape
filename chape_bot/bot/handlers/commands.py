@@ -6,8 +6,8 @@ from aiogram.utils.i18n import gettext as _
 
 from chape_bot.database.orm import UserQuery
 from ..configs import words
-from ..keyboards.base import main_menu, langs_kb
-from ..states import SignupState, UserPanel
+from ..keyboards.base import main_menu, langs_kb, activate_kb
+from ..states import SignupState, UserPanel, ProfileSettings
 
 router = Router()
 
@@ -23,7 +23,8 @@ async def cmd_start_handler(message: Message, state: FSMContext):
         elif user.is_block:
             pass
         else:
-            pass
+            await message.answer(_(words.deactivate_msg), reply_markup=activate_kb())
+            await state.set_state(ProfileSettings.deactivated)
     else:
         await state.set_state(SignupState.lang)
         await state.update_data(tg_id=message.from_user.id,
