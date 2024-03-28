@@ -3,7 +3,9 @@
 policy
 tests
 locales
+alembic
 __pycache__
+alembic.ini
 .env
 *.mo
 *.pyc
