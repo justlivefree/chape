@@ -96,15 +96,18 @@ async def get_interests(callback: CallbackQuery, state: FSMContext, bot: Bot):
 @router.message(SignupState.bio, F.text)
 async def get_bio(message: Message, state: FSMContext):
     await state.update_data(description=message.text)
-    await state.set_state(SignupState.city)
+    await state.set_state(SignupState.location)
     await message.answer(_(words.signup.location), reply_markup=location_kb())
 
 
-@router.message(F.location)
+@router.message(SignupState.location, F.location)
 async def get_location(message: Message, state: FSMContext):
     lat, lon = message.location.latitude, message.location.longitude
-    loc = await get_location_data(lat, lon)
-    await state.update_data(**{'lat': lat, 'lon': lon, 'city': loc['city'], 'country': loc['country']})
+    try:
+        loc = await get_location_data(lat, lon)
+        await state.update_data(**{'lat': lat, 'lon': lon, 'city': loc.get('city'), 'country': loc['country']})
+    except AttributeError:
+        return
     await state.set_state(SignupState.media)
     await message.answer(_(words.signup.media), reply_markup=ReplyKeyboardRemove())
 

@@ -1,7 +1,6 @@
 from aiogram.types import Message, InputMediaPhoto, InputMediaVideo
 from geopy.adapters import AioHTTPAdapter
 from geopy.geocoders import Nominatim
-
 from chape_bot.bot.configs import words
 
 

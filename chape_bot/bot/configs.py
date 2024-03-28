@@ -1,10 +1,13 @@
-from gettext import gettext as _
 from pathlib import Path
 
 from aiogram.utils.i18n import I18n
 
 BASE_DIR = Path(__file__).parent.parent.parent
 i18n = I18n(path=BASE_DIR / 'locales', domain='chape_bot')
+
+
+def _(val):
+    return val
 
 
 class words:
@@ -49,10 +52,10 @@ class words:
     ready = _('Ready⏩')
     back = _('Back⬅️')
     cancel = _('Cancel')
-    location = _('Location')
+    location = _('Location📍')
     yes = _('Yes')
     no = _('No')
-    activate = _('Activate')
+    activate = _('Activate💡')
     deactivate_msg = _('Your account deactivated')
     sender_profile = _('Sender profile')
 
@@ -70,7 +73,7 @@ class words:
         disagree = _('Disagree')
         name = _('Name:')
         age = _('Age:')
-        gender = (_('Gender:'), _('Male🙋‍♂️'), _('Female‍🙋‍♀️'))
+        gender = type('gender', (), {'title': _('Gender:'), 'male': _('Male🙋‍♂️'), 'female': _('Female‍🙋‍♀️')})
         location = _('Location:')
         bio = _('Write about yourself:')
         info_choice = _('Choose your interests, it helps to make better conversation')
@@ -111,7 +114,7 @@ class words:
 
     class inbox:
         inbox_notif = _('📬\nYou have message.\nCheck your inbox...')
-        like_notif = _('Someone send you like❤️')
-        reply_notif = _('Someone reply you📨')
-        audio_notif = _('Someone send you voice message')
-        video_notif = _('Someone send you video')
+        like_notif = _('Someone sent you like❤️')
+        reply_notif = _('Someone replied you📨')
+        audio_notif = _('Someone sent you voice message')
+        video_notif = _('Someone sent you video')

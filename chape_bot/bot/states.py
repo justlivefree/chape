@@ -9,7 +9,7 @@ class SignupState(StatesGroup):
     gender = State()
     interest = State()
     bio = State()
-    city = State()
+    location = State()
     media = State()
 
 
@@ -28,6 +28,7 @@ class ProfileSettings(StatesGroup):
     change_interests = State()
     change_bio = State()
     deactivate = State()
+    deactivated = State()
 
 
 class SearchPanel(StatesGroup):

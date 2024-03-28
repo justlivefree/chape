@@ -10,7 +10,7 @@ from ..configs import words
 from ..keyboards.base import cancel_kb, langs_kb, main_menu, location_kb, yes_no_kb, activate_kb
 from ..keyboards.profile import profile
 from ..keyboards.signup import interests_panel
-from ..middlewares import MediaGroupMiddleware, i18n_middleware, media_middleware
+from ..middlewares import i18n_middleware, media_middleware
 from ..states import UserPanel, ProfileSettings
 from ..utils import get_location_data
 
@@ -90,7 +90,7 @@ async def change_media(message: Message, state: FSMContext, media: Dict):
 @router.message(ProfileSettings.change_media, F.media_group_id)
 async def change_media_group(message: Message, state: FSMContext, media_group: Dict):
     if media_group['media']:
-        del MediaGroupMiddleware.media_groups[message.media_group_id]
+        del media_middleware.media_groups[message.media_group_id]
         await UserQuery.update_media(**media_group)
         await state.set_state(UserPanel.profile)
         await message.answer('✅', reply_markup=profile())
@@ -106,8 +106,11 @@ async def change_media_cancel(message: Message, state: FSMContext):
 @router.message(ProfileSettings.change_loc, F.location)
 async def change_location(message: Message, state: FSMContext):
     lat, lon = message.location.latitude, message.location.longitude
-    loc = await get_location_data(lat, lon)
-    result = {'lat': lat, 'lon': lon, 'city': loc['city'], 'country': loc['country']}
+    try:
+        loc = await get_location_data(lat, lon)
+        result = {'lat': lat, 'lon': lon, 'city': loc.get('city'), 'country': loc['country']}
+    except AttributeError:
+        return
     await UserQuery.update(message.from_user.id, **result)
     await state.set_state(UserPanel.profile)
     await message.answer('✅', reply_markup=profile())
@@ -155,9 +158,17 @@ async def change_interests(callback: CallbackQuery, state: FSMContext, bot: Bot)
 @router.message(ProfileSettings.deactivate)
 async def deactivate_user(message: Message, state: FSMContext):
     if message.text == _(words.yes):
-        await UserQuery.deactivate_user(message.from_user.id)
+        await UserQuery.update(message.from_user.id, is_active=False)
         await message.answer(_(words.deactivate_msg), reply_markup=activate_kb())
-        await state.clear()
+        await state.set_state(ProfileSettings.deactivated)
     else:
         await state.set_state(UserPanel.profile)
         await message.answer(_(words.main_panel.profile), reply_markup=profile())
+
+
+@router.message(ProfileSettings.deactivated)
+async def activate_user(message: Message, state: FSMContext):
+    if message.text == _(words.activate):
+        await UserQuery.update(message.from_user.id, is_active=True)
+        await state.set_state(UserPanel.menu)
+        await message.answer(_(words.main_panel.title), reply_markup=main_menu())

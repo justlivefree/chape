@@ -7,9 +7,11 @@ from aiogram import Bot
 from aiogram.enums import ParseMode
 
 from chape_bot.bot.dispatcher import get_dispatcher
+from chape_bot.database.orm import DBQuery
 
 
 async def main():
+    await DBQuery.create_tables()
     TOKEN = getenv("BOT_TOKEN")
     dp = get_dispatcher()
     bot = Bot(TOKEN, parse_mode=ParseMode.HTML)

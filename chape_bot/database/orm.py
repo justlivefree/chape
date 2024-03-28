@@ -1,7 +1,7 @@
 import datetime
 from datetime import datetime, timedelta
 
-from sqlalchemy import update, select, func, delete
+from sqlalchemy import update, select, func, delete, text
 from sqlalchemy.orm import selectinload, joinedload
 
 from chape_bot.database.config import PGSession, mongo_client, engine, mongo_db
@@ -17,7 +17,8 @@ class DBQuery:
     @staticmethod
     async def drop_tables():
         async with engine.begin() as conn:
-            await conn.run_sync(Base.metadata.drop_all)
+            await conn.execute(text('drop table if exists messages cascade;'))
+            await conn.execute(text('drop table if exists users cascade;'))
 
     @staticmethod
     async def create_media_col():

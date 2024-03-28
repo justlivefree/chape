@@ -8,7 +8,7 @@ from ..configs import words
 router = Router()
 
 
-@router.callback_query()
+@router.callback_query(lambda clb: '_' in clb.data)
 async def inbox_messages(callback: CallbackQuery, bot: Bot):
     type_msg, user_id = callback.data.split('_')
     if type_msg == 'like':
@@ -21,9 +21,3 @@ async def inbox_messages(callback: CallbackQuery, bot: Bot):
         await ReportQuery.create(sender_id=callback.from_user.id, receiver_id=int(user_id))
     await bot.delete_message(callback.message.chat.id, callback.message.message_id)
     await callback.answer()
-
-# @router.message(UserPanel.inbox)
-# async def back_menu(message: Message, state: FSMContext):
-#     if message.text == _(words.back):
-#         await state.set_state(UserPanel.menu)
-#         await message.answer(_(words.main_panel.title), reply_markup=main_menu())

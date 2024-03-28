@@ -44,7 +44,7 @@ class User(Base, BaseModel):
     # ----
     lang = Column(String(5))
     locale = Column(String(5))
-    city = Column(String(255))
+    city = Column(String(255), nullable=True)
     country = Column(String(255))
     lat = Column(Float, nullable=True)
     lon = Column(Float, nullable=True)
@@ -55,7 +55,7 @@ class User(Base, BaseModel):
     dislikes = Column(Integer, default=0)
 
     # ---
-    sent_complaints = relationship('Report', foreign_keys='[Report.sender_id]')
+    sent_complaints = relationship('Report', foreign_keys='[Report.sender_id]', )
     received_complaints = relationship('Report', foreign_keys='[Report.receiver_id]')
 
     # ----

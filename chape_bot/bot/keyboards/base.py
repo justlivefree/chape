@@ -54,8 +54,10 @@ def location_kb(add_back=False):
 
 
 def yes_no_kb():
-    return ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text='Yes'), KeyboardButton(text='No')]])
+    return ReplyKeyboardMarkup(resize_keyboard=True,
+                               keyboard=[[KeyboardButton(text=_(words.yes)), KeyboardButton(text=_(words.no))]])
 
 
 def activate_kb():
-    return ReplyKeyboardMarkup(keyboard=[[KeyboardButton(text=_(words.activate))]])
+    return ReplyKeyboardMarkup(resize_keyboard=True,
+                               keyboard=[[KeyboardButton(text=_(words.activate))]])
