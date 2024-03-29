@@ -1,0 +1,70 @@
+version: '3.1'
+
+services:
+  bot:
+    container_name: chapebot_online
+    build: .
+    env_file:
+      - .env
+    depends_on:
+      - postgres_db
+      - mongo_db
+      - redis_db
+    restart: always
+
+  redis_db:
+    container_name: chapebot_redis
+    image: redis:alpine
+    volumes:
+      - redis_data:/data
+    ports:
+      - 6379:6379
+    command:
+      - redis-server
+    restart: on-failure
+
+  postgres_db:
+    container_name: chapebot_postgres
+    image: postgres:alpine
+    volumes:
+      - pg_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+    restart: always
+    env_file:
+      - .env
+
+  pgadmin:
+    container_name: postgres_admin
+    image: dpage/pgadmin4
+    env_file:
+      - .env
+    ports:
+      - 5050:80
+    depends_on:
+      - postgres_db
+
+  mongo_db:
+    container_name: chapebot_mongo
+    image: mongo
+    env_file:
+      - .env
+    ports:
+      - 27017:27017
+    volumes:
+      - mongo_data:/data/db
+
+  mongo_express:
+    container_name: mongo_admin
+    image: mongo-express
+    ports:
+      - 8081:8081
+    env_file:
+      - .env
+    depends_on:
+      - mongo_db
+
+volumes:
+  mongo_data:
+  pg_data:
+  redis_data:
