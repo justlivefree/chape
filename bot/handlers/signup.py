@@ -6,8 +6,8 @@ from aiogram.types import Message, CallbackQuery
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from aiogram.utils.i18n import gettext as _
 
-from chape_bot.database.models import Gender
-from chape_bot.database.orm import UserQuery
+from database.models import Gender
+from database.orm import UserQuery
 from ..configs import words
 from ..keyboards.base import main_menu, location_kb, agree_disagree
 from ..keyboards.signup import interests_panel
@@ -34,6 +34,7 @@ async def get_agreement(message: Message, state: FSMContext):
         await state.set_state(SignupState.fullname)
         await message.answer(_(words.signup.name), reply_markup=ReplyKeyboardRemove())
     elif message.text == _(words.signup.disagree):
+        await message.answer(_(words.signup.disagree_description), reply_markup=ReplyKeyboardRemove())
         await state.clear()
     else:
         await message.delete()

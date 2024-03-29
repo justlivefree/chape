@@ -1,7 +1,8 @@
 from aiogram.types import Message, InputMediaPhoto, InputMediaVideo
 from geopy.adapters import AioHTTPAdapter
 from geopy.geocoders import Nominatim
-from chape_bot.bot.configs import words
+
+from .configs import words
 
 
 def media_maker(message: Message):
@@ -12,14 +13,12 @@ def media_maker(message: Message):
 
 
 def media_group_maker(media: list, info: str):
-    result = []
-    is_add = True
-    for m in media:
+    result = [InputMediaPhoto(media=media[0]['file_id'], caption=info)]
+    for m in media[1:]:
         if m['type'] == 'photo':
-            result.append(InputMediaPhoto(media=m['file_id'], caption=info if is_add else None))
+            result.append(InputMediaPhoto(media=m['file_id']))
         else:
-            result.append(InputMediaVideo(media=m['file_id'], caption=info if is_add else None))
-        is_add *= False
+            result.append(InputMediaVideo(media=m['file_id']))
     return result
 
 

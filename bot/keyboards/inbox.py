@@ -2,7 +2,7 @@ from aiogram.types import InlineKeyboardButton
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.keyboard import InlineKeyboardBuilder
 
-from chape_bot.bot.configs import words
+from ..configs import words
 
 
 def inbox_message_panel(user_id, username=None):

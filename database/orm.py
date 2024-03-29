@@ -4,8 +4,8 @@ from datetime import datetime, timedelta
 from sqlalchemy import update, select, func, delete, text
 from sqlalchemy.orm import selectinload, joinedload
 
-from chape_bot.database.config import PGSession, mongo_client, engine, mongo_db
-from chape_bot.database.models import User, Interest, Report, Base
+from database.config import PGSession, mongo_client, engine, mongo_db
+from database.models import User, Interest, Report, Base
 
 
 class DBQuery:
@@ -17,6 +17,7 @@ class DBQuery:
     @staticmethod
     async def drop_tables():
         async with engine.begin() as conn:
+            await conn.execute(text('drop table if exists reports cascade;'))
             await conn.execute(text('drop table if exists messages cascade;'))
             await conn.execute(text('drop table if exists users cascade;'))
 
@@ -56,31 +57,11 @@ class UserQuery:
             await session.commit()
 
     @staticmethod
-    async def activate_user(tg_id):
-        async with PGSession() as session:
-            query = update(User).where(User.tg_id == tg_id).values(is_active=True)
-            result = await session.execute(query)
-            if result.rowcount:
-                await session.commit()
-                return True
-
-    @staticmethod
-    async def deactivate_user(tg_id):
-        async with PGSession() as session:
-            query = update(User).where(User.tg_id == tg_id).values(is_active=False)
-            result = await session.execute(query)
-            if result.rowcount:
-                await session.commit()
-                return True
-
-    @staticmethod
     async def delete_user(tg_id):
         async with PGSession() as session:
             query = delete(User).where(User.tg_id == tg_id).options(selectinload(User.interests))
-            result = await session.execute(query)
-            if result.rowcount:
-                await session.commit()
-                return True
+            await session.execute(query)
+            await session.commit()
 
     # media
     @staticmethod
@@ -178,10 +159,6 @@ class InboxQuery:
     @staticmethod
     async def create(**kwargs):
         await mongo_db.inbox.insert_one(kwargs)
-
-    @staticmethod
-    async def update(message_id):
-        pass
 
     @staticmethod
     async def make_messages_read(receiver):

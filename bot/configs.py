@@ -2,7 +2,7 @@ from pathlib import Path
 
 from aiogram.utils.i18n import I18n
 
-BASE_DIR = Path(__file__).parent.parent.parent
+BASE_DIR = Path(__file__).parent.parent
 i18n = I18n(path=BASE_DIR / 'locales', domain='chape_bot')
 
 
@@ -19,8 +19,7 @@ class words:
                "\n\nIn addition, the bot owner does not assume responsibility for any material "
                "or moral damage that may arise from your interaction with the bot. "
                "\n\nIf you have any questions or suggestions, feel free to contact us at %s.")
-    welcome = _('Welcome and enjoy☺️')
-    search_title = _('Write something sweet')
+    welcome = _('Welcome☺️')
     income_message = _('You have %d messages')
     interests_titles = (_('Anime'), _('Movie'),
                         _('Music'), _('Cars'),
@@ -78,7 +77,8 @@ class words:
         bio = _('Write about yourself:')
         info_choice = _('Choose your interests, it helps to make better conversation')
         choose = _('Choose:')
-        media = _('Send profile photo or video')
+        media = _('Send profile photo or video:')
+        disagree_description = _('Okay. If you change your mind, just click /start.')
 
     class main_panel:
         title = _('Main menu')
@@ -88,19 +88,19 @@ class words:
 
     class report_panel:
         title = _('Report⚠️')
-        sexual = _('Sexual')
-        pedophilia = _('Pedophilia')
+        sexual = _('Sexual character')
         hateful = _('Hateful')
         dangerous = _('Dangerous')
-        send = _('Report send successfully.')
+        send = _('Report sent successfully.')
 
     class search_panel:
         title = _('Search settings')
         female = _('Girls 👸🏼')
         male = _('Boys 🥷')
         all = _('All ✈️')
-        interest = _('Interest:')
-        send_message = _('Send something sweet')
+        interest = _('Interest')
+        send_message = _('Send something nice')
+        send_report = _('Select type of report')
 
     class profile:
         change_name = _('Change name')

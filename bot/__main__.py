@@ -6,8 +6,8 @@ from os import getenv
 from aiogram import Bot
 from aiogram.enums import ParseMode
 
-from chape_bot.bot.dispatcher import get_dispatcher
-from chape_bot.database.orm import DBQuery
+from database.orm import DBQuery
+from .dispatcher import get_dispatcher
 
 
 async def main():

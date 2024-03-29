@@ -2,11 +2,11 @@ from aiogram import F, Bot, Router
 from aiogram.enums import ContentType
 from aiogram.fsm.context import FSMContext
 from aiogram.types import CallbackQuery, Message
-from aiogram.utils.i18n import gettext as _
+from aiogram.utils.i18n import gettext as _, lazy_gettext as __
 
-from chape_bot.database.orm import UserQuery, InboxQuery, ReportQuery
+from database.orm import UserQuery, InboxQuery, ReportQuery
 from ..configs import words
-from ..keyboards.base import main_menu
+from ..keyboards.base import main_menu, cancel_kb
 from ..keyboards.search import search_settings_panel, search_panel, report_panel
 from ..middlewares import media_middleware
 from ..states import SearchPanel, UserPanel
@@ -55,7 +55,8 @@ async def searching_like(message: Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
     user, media = await UserQuery.select_partner(message.from_user.id, **data['search_cfg'])
     await InboxQuery.create(receiver=data['partner_user_id'], sender=message.from_user.id, type='like', is_read=False)
-    await bot.send_message(data['partner_user_id'], _(words.inbox.inbox_notif))
+    if user.tg_id > 1_000_000:
+        await bot.send_message(data['partner_user_id'], _(words.inbox.inbox_notif))
     await user_info_sender(bot, user, media, message.chat.id)
     await state.update_data(partner_user_id=user.tg_id)
 
@@ -63,6 +64,7 @@ async def searching_like(message: Message, state: FSMContext, bot: Bot):
 @router.message(SearchPanel.search, F.text == '👎')
 async def searching_dislike(message: Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
+    await message.answer(_(words.main_panel.search), reply_markup=search_panel())
     user, media = await UserQuery.select_partner(message.from_user.id, **data['search_cfg'])
     await user_info_sender(bot, user, media, message.chat.id)
     await state.update_data(partner_user_id=user.tg_id)
@@ -70,11 +72,31 @@ async def searching_dislike(message: Message, state: FSMContext, bot: Bot):
 
 @router.message(SearchPanel.search, F.text == '✉️')
 async def searching_send_msg(message: Message, state: FSMContext):
-    await message.answer(_(words.search_panel.send_message))
+    await message.answer(_(words.search_panel.send_message), reply_markup=cancel_kb())
     await state.set_state(SearchPanel.message)
 
 
-@router.message(SearchPanel.message)
+@router.message(SearchPanel.search)
+async def searching_property(message: Message, state: FSMContext):
+    if message.text == _(words.cancel):
+        await state.set_state(UserPanel.menu)
+        await message.answer(_(words.main_panel.title), reply_markup=main_menu())
+    elif message.text == _(words.report_panel.title):
+        await state.set_state(SearchPanel.report)
+        await message.answer(_(words.search_panel.send_report), reply_markup=report_panel())
+
+
+@router.message(SearchPanel.message, F.text == __(words.cancel))
+async def cancel_send_message(message: Message, state: FSMContext, bot: Bot):
+    data = await state.get_data()
+    user, media = await UserQuery.select_partner(message.from_user.id, **data['search_cfg'])
+    await message.answer(_(words.main_panel.search), reply_markup=search_panel())
+    await user_info_sender(bot, user, media, message.chat.id)
+    await state.set_state(SearchPanel.search)
+    await state.update_data(partner_user_id=user.tg_id)
+
+
+@router.message(SearchPanel.message, ~F.media_group_id)
 async def get_message(message: Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
     content_type = message.content_type
@@ -95,21 +117,12 @@ async def get_message(message: Message, state: FSMContext, bot: Bot):
         return
     await InboxQuery.create(**body)
     await message.answer('📨🚀', reply_markup=search_panel())
-    await bot.send_message(data['partner_user_id'], _(words.inbox.inbox_notif))
+    if data['partner_user_id'] > 1_000_000:
+        await bot.send_message(data['partner_user_id'], _(words.inbox.inbox_notif))
     user, media = await UserQuery.select_partner(message.from_user.id, **data['search_cfg'])
     await user_info_sender(bot, user, media, message.chat.id)
     await state.set_state(SearchPanel.search)
     await state.update_data(partner_user_id=user.tg_id)
-
-
-@router.message(SearchPanel.search)
-async def searching_property(message: Message, state: FSMContext):
-    if message.text == _(words.cancel):
-        await state.set_state(UserPanel.menu)
-        await message.answer(_(words.main_panel.title), reply_markup=main_menu())
-    elif message.text == _(words.report_panel.title):
-        await state.set_state(SearchPanel.report)
-        await message.answer('Write ur report', reply_markup=report_panel())
 
 
 @router.message(SearchPanel.report)
@@ -130,8 +143,10 @@ async def get_report(message: Message, state: FSMContext, bot: Bot):
         else:
             options['description'] = message.text
         await ReportQuery.create(**options)
-        await message.answer(_(words.report_panel.send))
+        await message.answer(_(words.report_panel.send), reply_markup=search_panel())
+    else:
+        await message.answer(_(words.main_panel.search), reply_markup=search_panel())
     user, media = await UserQuery.select_partner(message.from_user.id, **data['search_cfg'])
-    await user_info_sender(bot, user, media, message.chat.id, reply_markup=search_panel())
+    await user_info_sender(bot, user, media, message.chat.id)
     await state.set_state(SearchPanel.search)
     await state.update_data(partner_user_id=user.tg_id)

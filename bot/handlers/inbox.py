@@ -2,7 +2,7 @@ from aiogram import Router, Bot
 from aiogram.types import CallbackQuery
 from aiogram.utils.i18n import gettext as _
 
-from chape_bot.database.orm import InboxQuery, ReportQuery
+from database.orm import InboxQuery, ReportQuery
 from ..configs import words
 
 router = Router()

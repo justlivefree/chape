@@ -4,7 +4,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message
 from aiogram.utils.i18n import gettext as _
 
-from chape_bot.database.orm import UserQuery
+from database.orm import UserQuery
 from ..configs import words
 from ..keyboards.base import main_menu, langs_kb, activate_kb
 from ..states import SignupState, UserPanel, ProfileSettings

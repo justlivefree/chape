@@ -22,8 +22,8 @@ def get_dispatcher():
     dp.message.outer_middleware(private_chat_middleware)
     dp.callback_query.outer_middleware(private_chat_middleware)
     # lang setting
-    dp.message.middleware(i18n_middleware)
-    dp.callback_query.middleware(i18n_middleware)
+    dp.message.outer_middleware(i18n_middleware)
+    dp.callback_query.outer_middleware(i18n_middleware)
 
     dp.include_routers(*routers)
 

@@ -6,7 +6,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, TelegramObject
 from aiogram.utils.i18n import FSMI18nMiddleware, SimpleI18nMiddleware
 
-from chape_bot.database.orm import UserQuery
+from database.orm import UserQuery
 from .configs import i18n
 from .utils import media_maker
 

@@ -5,7 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
 from aiogram.utils.i18n import gettext as _
 
-from chape_bot.database.orm import UserQuery
+from database.orm import UserQuery
 from ..configs import words
 from ..keyboards.base import cancel_kb, langs_kb, main_menu, location_kb, yes_no_kb, activate_kb
 from ..keyboards.profile import profile

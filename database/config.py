@@ -9,10 +9,10 @@ load_dotenv()
 db_name = os.getenv('POSTGRES_DB')
 db_user = os.getenv('POSTGRES_USER')
 db_password = os.getenv('POSTGRES_PASSWORD')
-
+db_hostname = os.getenv('POSTGRES_HOSTNAME')
 mongo_host = os.getenv('MONGO_HOSTNAME')
 
-db_url = f'postgresql+asyncpg://{db_user}:{db_password}@127.0.0.1:5432/{db_name}'
+db_url = f'postgresql+asyncpg://{db_user}:{db_password}@{db_hostname}:5432/{db_name}'
 mongo_url = f'mongodb://admin:1111@{mongo_host}:27017'
 
 engine = create_async_engine(db_url, echo=True)

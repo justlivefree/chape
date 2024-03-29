@@ -3,7 +3,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.utils.i18n import gettext as _
 
-from chape_bot.database.orm import UserQuery, InboxQuery
+from database.orm import UserQuery, InboxQuery
 from ..configs import words
 from ..keyboards.inbox import inbox_message_panel, inbox_reply_panel
 from ..keyboards.profile import profile

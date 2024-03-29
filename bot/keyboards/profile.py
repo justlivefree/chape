@@ -2,7 +2,7 @@ from aiogram.types import KeyboardButton
 from aiogram.utils.i18n import gettext as _
 from aiogram.utils.keyboard import ReplyKeyboardBuilder
 
-from chape_bot.bot.configs import words
+from ..configs import words
 
 
 def profile():
