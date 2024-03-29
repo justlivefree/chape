@@ -7,6 +7,5 @@ motor==3.3.2
 polib==1.2.0
 redis==5.0.1
 SQLAlchemy==2.0.25
-Faker==23.2.1
 alembic==1.13.1
 python-dotenv==1.0.1
