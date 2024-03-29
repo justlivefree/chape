@@ -1,0 +1,330 @@
+# Translations template for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-03-29 17:21+0500\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: bot/configs.py:14
+#, python-format
+msgid ""
+"Hello, esteemed user. \n"
+"Through this bot, you can connect with friends and meet new people. \n"
+"\n"
+"Please note that the bot administrators continuously monitor its "
+"operation to ensure everything runs smoothly. If you come across any "
+"inappropriate images or videos with a questionable character, please "
+"report to us. We will take action thereafter. \n"
+"\n"
+"In addition, the bot owner does not assume responsibility for any "
+"material or moral damage that may arise from your interaction with the "
+"bot. \n"
+"\n"
+"If you have any questions or suggestions, feel free to contact us at %s."
+msgstr ""
+
+#: bot/configs.py:22
+msgid "Welcome☺️"
+msgstr ""
+
+#: bot/configs.py:23
+#, python-format
+msgid "You have %d messages"
+msgstr ""
+
+#: bot/configs.py:24
+msgid "Anime"
+msgstr ""
+
+#: bot/configs.py:24
+msgid "Movie"
+msgstr ""
+
+#: bot/configs.py:25
+msgid "Music"
+msgstr ""
+
+#: bot/configs.py:25
+msgid "Cars"
+msgstr ""
+
+#: bot/configs.py:26
+msgid "Sport"
+msgstr ""
+
+#: bot/configs.py:26
+msgid "Books"
+msgstr ""
+
+#: bot/configs.py:27
+msgid "Study"
+msgstr ""
+
+#: bot/configs.py:27
+msgid "Math"
+msgstr ""
+
+#: bot/configs.py:28
+msgid "Design"
+msgstr ""
+
+#: bot/configs.py:28
+msgid "Art"
+msgstr ""
+
+#: bot/configs.py:29
+msgid "Programing"
+msgstr ""
+
+#: bot/configs.py:29
+msgid "Gaming"
+msgstr ""
+
+#: bot/configs.py:51
+msgid "Ready⏩"
+msgstr ""
+
+#: bot/configs.py:52
+msgid "Back⬅️"
+msgstr ""
+
+#: bot/configs.py:53
+msgid "Cancel"
+msgstr ""
+
+#: bot/configs.py:54
+msgid "Location📍"
+msgstr ""
+
+#: bot/configs.py:55
+msgid "Yes"
+msgstr ""
+
+#: bot/configs.py:56
+msgid "No"
+msgstr ""
+
+#: bot/configs.py:57
+msgid "Activate💡"
+msgstr ""
+
+#: bot/configs.py:58
+msgid "Your account deactivated"
+msgstr ""
+
+#: bot/configs.py:59
+msgid "Sender profile"
+msgstr ""
+
+#: bot/configs.py:62
+msgid "Write number"
+msgstr ""
+
+#: bot/configs.py:63
+msgid "Send only photo or video"
+msgstr ""
+
+#: bot/configs.py:64
+msgid "Your age does not apply for policy"
+msgstr ""
+
+#: bot/configs.py:65
+#, python-format
+msgid "You have been blocked for %s days"
+msgstr ""
+
+#: bot/configs.py:66
+msgid "You deactivated. Click button below for activation"
+msgstr ""
+
+#: bot/configs.py:67
+msgid "Bot can't send user's profile, cause account is private"
+msgstr ""
+
+#: bot/configs.py:70
+msgid "Choose language:"
+msgstr ""
+
+#: bot/configs.py:71
+msgid "Agree"
+msgstr ""
+
+#: bot/configs.py:72
+msgid "Disagree"
+msgstr ""
+
+#: bot/configs.py:73
+msgid "Name:"
+msgstr ""
+
+#: bot/configs.py:74
+msgid "Age:"
+msgstr ""
+
+#: bot/configs.py:75
+msgid "Gender:"
+msgstr ""
+
+#: bot/configs.py:75
+msgid "Male🙋‍♂️"
+msgstr ""
+
+#: bot/configs.py:75
+msgid "Female‍🙋‍♀️"
+msgstr ""
+
+#: bot/configs.py:76
+msgid "Location:"
+msgstr ""
+
+#: bot/configs.py:77
+msgid "Write about yourself:"
+msgstr ""
+
+#: bot/configs.py:78
+msgid "Choose your interests, it helps to make better conversation"
+msgstr ""
+
+#: bot/configs.py:79
+msgid "Choose:"
+msgstr ""
+
+#: bot/configs.py:80
+msgid "Send profile photo or video:"
+msgstr ""
+
+#: bot/configs.py:81
+msgid "Okay. If you change your mind, just click /start."
+msgstr ""
+
+#: bot/configs.py:84
+msgid "Main menu"
+msgstr ""
+
+#: bot/configs.py:85
+msgid "Search 🚀"
+msgstr ""
+
+#: bot/configs.py:86
+msgid "Inbox 📥"
+msgstr ""
+
+#: bot/configs.py:87
+msgid "Profile 👤"
+msgstr ""
+
+#: bot/configs.py:90
+msgid "Report⚠️"
+msgstr ""
+
+#: bot/configs.py:91
+msgid "Sexual character"
+msgstr ""
+
+#: bot/configs.py:92
+msgid "Hateful"
+msgstr ""
+
+#: bot/configs.py:93
+msgid "Dangerous"
+msgstr ""
+
+#: bot/configs.py:94
+msgid "Report sent successfully."
+msgstr ""
+
+#: bot/configs.py:97
+msgid "Search settings"
+msgstr ""
+
+#: bot/configs.py:98
+msgid "Girls 👸🏼"
+msgstr ""
+
+#: bot/configs.py:99
+msgid "Boys 🥷"
+msgstr ""
+
+#: bot/configs.py:100
+msgid "All ✈️"
+msgstr ""
+
+#: bot/configs.py:101
+msgid "Interest"
+msgstr ""
+
+#: bot/configs.py:102
+msgid "Send something nice"
+msgstr ""
+
+#: bot/configs.py:103
+msgid "Select type of report"
+msgstr ""
+
+#: bot/configs.py:106
+msgid "Change name"
+msgstr ""
+
+#: bot/configs.py:107
+msgid "Change media"
+msgstr ""
+
+#: bot/configs.py:108
+msgid "Change location"
+msgstr ""
+
+#: bot/configs.py:109
+msgid "Change language"
+msgstr ""
+
+#: bot/configs.py:110
+msgid "Change interests"
+msgstr ""
+
+#: bot/configs.py:111
+msgid "Change bio"
+msgstr ""
+
+#: bot/configs.py:112
+msgid "Deactivate 🪓"
+msgstr ""
+
+#: bot/configs.py:113
+msgid "Are you sure you want to deactivate your account?"
+msgstr ""
+
+#: bot/configs.py:116
+msgid ""
+"📬\n"
+"You have message.\n"
+"Check your inbox..."
+msgstr ""
+
+#: bot/configs.py:117
+msgid "Someone sent you like❤️"
+msgstr ""
+
+#: bot/configs.py:118
+msgid "Someone replied you📨"
+msgstr ""
+
+#: bot/configs.py:119
+msgid "Someone sent you voice message"
+msgstr ""
+
+#: bot/configs.py:120
+msgid "Someone sent you video"
+msgstr ""
+

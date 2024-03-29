@@ -1,0 +1,337 @@
+# Uzbek translations for PROJECT.
+# Copyright (C) 2024 ORGANIZATION
+# This file is distributed under the same license as the PROJECT project.
+# FIRST AUTHOR <EMAIL@ADDRESS>, 2024.
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"Report-Msgid-Bugs-To: EMAIL@ADDRESS\n"
+"POT-Creation-Date: 2024-03-29 17:21+0500\n"
+"PO-Revision-Date: 2024-03-29 17:21+0500\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: uz <LL@li.org>\n"
+"Language: uz\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=2; plural=(n != 1);\n"
+"Generated-By: Babel 2.14.0\n"
+
+#: bot/configs.py:14
+#, python-format
+msgid ""
+"Hello, esteemed user. \n"
+"Through this bot, you can connect with friends and meet new people. \n"
+"\n"
+"Please note that the bot administrators continuously monitor its operation to ensure everything runs smoothly. If you come across any inappropriate images or videos with a questionable character, please report to us. We will take action thereafter. \n"
+"\n"
+"In addition, the bot owner does not assume responsibility for any material or moral damage that may arise from your interaction with the bot. \n"
+"\n"
+"If you have any questions or suggestions, feel free to contact us at %s."
+msgstr ""
+"Assalomu alaykum, hurmatli foydalanuvchi.\n"
+"Ushbu bot orqali siz do'stlar bilan bog'lanishingiz va yangi odamlar bilan tanishishingiz mumkin.\n"
+"\n"
+"Shuni yodda tutingki, bot ma'murlari hammasi muammosiz ishlashini ta'minlash uchun uning ishlashini doimiy ravishda kuzatib boradi. Agar shubhali xarakterga ega bo'lgan nomaqbul rasm yoki videolarga duch kelsangiz, bizga xabar bering. Shundan keyin chora ko'ramiz.\n"
+"\n"
+"Bundan tashqari, bot egasi sizning bot bilan o‘zaro munosabatingizdan kelib chiqishi mumkin bo‘lgan moddiy yoki ma’naviy zarar uchun javobgarlikni o‘z zimmasiga olmaydi.\n"
+"\n"
+"Agar sizda biron bir savol yoki taklif bo'lsa, biz bilan %s orqali bog'laning."
+
+#: bot/configs.py:22
+msgid "Welcome☺️"
+msgstr "Xush kelibsiz☺️"
+
+#: bot/configs.py:23
+#, python-format
+msgid "You have %d messages"
+msgstr "Sizda %d ta xabar bor"
+
+#: bot/configs.py:24
+msgid "Anime"
+msgstr "Anime"
+
+#: bot/configs.py:24
+msgid "Movie"
+msgstr "Kino"
+
+#: bot/configs.py:25
+msgid "Music"
+msgstr "Musiqa"
+
+#: bot/configs.py:25
+msgid "Cars"
+msgstr "Avtomobillar"
+
+#: bot/configs.py:26
+msgid "Sport"
+msgstr "Sport"
+
+#: bot/configs.py:26
+msgid "Books"
+msgstr "Kitoblar"
+
+#: bot/configs.py:27
+msgid "Study"
+msgstr "O'qish"
+
+#: bot/configs.py:27
+msgid "Math"
+msgstr "Matematika"
+
+#: bot/configs.py:28
+msgid "Design"
+msgstr "Dizayn"
+
+#: bot/configs.py:28
+msgid "Art"
+msgstr "Art"
+
+#: bot/configs.py:29
+msgid "Programing"
+msgstr "Dasturlash"
+
+#: bot/configs.py:29
+msgid "Gaming"
+msgstr "Oʻyin"
+
+#: bot/configs.py:51
+msgid "Ready⏩"
+msgstr "Tayyor⏩"
+
+#: bot/configs.py:52
+msgid "Back⬅️"
+msgstr "Orqaga⬅️"
+
+#: bot/configs.py:53
+msgid "Cancel"
+msgstr "Bekor qilish"
+
+#: bot/configs.py:54
+msgid "Location📍"
+msgstr "Manzil📍"
+
+#: bot/configs.py:55
+msgid "Yes"
+msgstr "Ha"
+
+#: bot/configs.py:56
+msgid "No"
+msgstr "Yo'q"
+
+#: bot/configs.py:57
+msgid "Activate💡"
+msgstr "Faollashtirish💡"
+
+#: bot/configs.py:58
+msgid "Your account deactivated"
+msgstr "Hisobingiz o'chirildi"
+
+#: bot/configs.py:59
+msgid "Sender profile"
+msgstr "Yuboruvchi profili"
+
+#: bot/configs.py:62
+msgid "Write number"
+msgstr "Raqamni yozing"
+
+#: bot/configs.py:63
+msgid "Send only photo or video"
+msgstr "Faqat rasm yoki video yuboring"
+
+#: bot/configs.py:64
+msgid "Your age does not apply for policy"
+msgstr "Sizning yoshingiz siyosat uchun qo'llanilmaydi"
+
+#: bot/configs.py:65
+#, python-format
+msgid "You have been blocked for %s days"
+msgstr "Siz %s kundan beri bloklangansiz"
+
+#: bot/configs.py:66
+msgid "You deactivated. Click button below for activation"
+msgstr "Siz faolsizlantirdingiz. Faollashtirish uchun quyidagi tugmani bosing"
+
+#: bot/configs.py:67
+msgid "Bot can't send user's profile, cause account is private"
+msgstr "Bot foydalanuvchi profilini yubora olmaydi, chunki hisob shaxsiy"
+
+#: bot/configs.py:70
+msgid "Choose language:"
+msgstr "Tilni tanlang:"
+
+#: bot/configs.py:71
+msgid "Agree"
+msgstr "Rozi"
+
+#: bot/configs.py:72
+msgid "Disagree"
+msgstr "rozi emasman"
+
+#: bot/configs.py:73
+msgid "Name:"
+msgstr "Nomi:"
+
+#: bot/configs.py:74
+msgid "Age:"
+msgstr "Yosh:"
+
+#: bot/configs.py:75
+msgid "Gender:"
+msgstr "Jins:"
+
+#: bot/configs.py:75
+msgid "Male🙋‍♂️"
+msgstr "Erkak🙋‍♂️"
+
+#: bot/configs.py:75
+msgid "Female‍🙋‍♀️"
+msgstr "Ayol‍🙋‍♀️"
+
+#: bot/configs.py:76
+msgid "Location:"
+msgstr "Manzil:"
+
+#: bot/configs.py:77
+msgid "Write about yourself:"
+msgstr "O'zingiz haqingizda yozing:"
+
+#: bot/configs.py:78
+msgid "Choose your interests, it helps to make better conversation"
+msgstr "Qiziqishlaringizni tanlang, bu suhbatni yaxshilashga yordam beradi"
+
+#: bot/configs.py:79
+msgid "Choose:"
+msgstr "Tanlang:"
+
+#: bot/configs.py:80
+msgid "Send profile photo or video:"
+msgstr "Profil fotosurati yoki videosini yuboring:"
+
+#: bot/configs.py:81
+msgid "Okay. If you change your mind, just click /start."
+msgstr ""
+"Xop. Agar fikringizni o'zgartirsangiz, shunchaki / start tugmasini bosing."
+
+#: bot/configs.py:84
+msgid "Main menu"
+msgstr "Asosiy menyu"
+
+#: bot/configs.py:85
+msgid "Search 🚀"
+msgstr "Qidirish 🚀"
+
+#: bot/configs.py:86
+msgid "Inbox 📥"
+msgstr "Kirish qutisi 📥"
+
+#: bot/configs.py:87
+msgid "Profile 👤"
+msgstr "Profil 👤"
+
+#: bot/configs.py:90
+msgid "Report⚠️"
+msgstr "Xabar berish⚠️"
+
+#: bot/configs.py:91
+msgid "Sexual character"
+msgstr "Jinsiy xarakter"
+
+#: bot/configs.py:92
+msgid "Hateful"
+msgstr "Nafratli"
+
+#: bot/configs.py:93
+msgid "Dangerous"
+msgstr "Xavfli"
+
+#: bot/configs.py:94
+msgid "Report sent successfully."
+msgstr "Hisobot muvaffaqiyatli yuborildi."
+
+#: bot/configs.py:97
+msgid "Search settings"
+msgstr "Qidiruv sozlamalari"
+
+#: bot/configs.py:98
+msgid "Girls 👸🏼"
+msgstr "Qizlar 👸🏼"
+
+#: bot/configs.py:99
+msgid "Boys 🥷"
+msgstr "Yigitlar 🥷"
+
+#: bot/configs.py:100
+msgid "All ✈️"
+msgstr "Hammasi ✈️"
+
+#: bot/configs.py:101
+msgid "Interest"
+msgstr "Qiziqish"
+
+#: bot/configs.py:102
+msgid "Send something nice"
+msgstr "Yaxshi narsa yuboring"
+
+#: bot/configs.py:103
+msgid "Select type of report"
+msgstr "Hisobot turini tanlang"
+
+#: bot/configs.py:106
+msgid "Change name"
+msgstr "Ismni o'zgartirish"
+
+#: bot/configs.py:107
+msgid "Change media"
+msgstr "Mediani o'zgartiring"
+
+#: bot/configs.py:108
+msgid "Change location"
+msgstr "Joylashuvni o'zgartirish"
+
+#: bot/configs.py:109
+msgid "Change language"
+msgstr "Tilni o'zgartirish"
+
+#: bot/configs.py:110
+msgid "Change interests"
+msgstr "Qiziqishlarni o'zgartirish"
+
+#: bot/configs.py:111
+msgid "Change bio"
+msgstr "Bioni o'zgartiring"
+
+#: bot/configs.py:112
+msgid "Deactivate 🪓"
+msgstr "O'chirish 🪓"
+
+#: bot/configs.py:113
+msgid "Are you sure you want to deactivate your account?"
+msgstr "Haqiqatan ham hisobingizni o'chirib qo'ymoqchimisiz?"
+
+#: bot/configs.py:116
+msgid ""
+"📬\n"
+"You have message.\n"
+"Check your inbox..."
+msgstr ""
+"📬\n"
+"Sizda xabar bor.\n"
+"Kiruvchi qutingizni tekshiring..."
+
+#: bot/configs.py:117
+msgid "Someone sent you like❤️"
+msgstr "Kimdir sizga like❤️ yubordi"
+
+#: bot/configs.py:118
+msgid "Someone replied you📨"
+msgstr "Kimdir sizga javob berdi📨"
+
+#: bot/configs.py:119
+msgid "Someone sent you voice message"
+msgstr "Kimdir sizga ovozli xabar yubordi"
+
+#: bot/configs.py:120
+msgid "Someone sent you video"
+msgstr "Kimdir sizga video yubordi"
