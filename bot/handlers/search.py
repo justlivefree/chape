@@ -22,9 +22,9 @@ async def start_selecting(callback: CallbackQuery, state: FSMContext, bot: Bot):
         data = await state.get_data()
         user, media = await UserQuery.select_partner(callback.from_user.id, **data['search_cfg'])
         await bot.delete_message(callback.message.chat.id, callback.message.message_id)
-        await callback.message.answer('Ready', reply_markup=search_panel())
+        await callback.message.answer('🚀', reply_markup=search_panel())
         await user_info_sender(bot, user, media, callback.message.chat.id)
-        await state.update_data(partner_user_id=user.tg_id, search_cfg=data['search_cfg'])
+        await state.update_data(partner_user_id=user.tg_id, partner_lang=user.lang, search_cfg=data['search_cfg'])
         await state.set_state(SearchPanel.search)
     except TypeError:
         pass
@@ -55,10 +55,9 @@ async def searching_like(message: Message, state: FSMContext, bot: Bot):
     data = await state.get_data()
     user, media = await UserQuery.select_partner(message.from_user.id, **data['search_cfg'])
     await InboxQuery.create(receiver=data['partner_user_id'], sender=message.from_user.id, type='like', is_read=False)
-    if user.tg_id > 1_000_000:
-        await bot.send_message(data['partner_user_id'], _(words.inbox.inbox_notif))
+    await bot.send_message(data['partner_user_id'], _(words.inbox.inbox_notif, locale=data['partner_lang']))
     await user_info_sender(bot, user, media, message.chat.id)
-    await state.update_data(partner_user_id=user.tg_id)
+    await state.update_data(partner_user_id=user.tg_id, partner_lang=user.lang)
 
 
 @router.message(SearchPanel.search, F.text == '👎')
@@ -67,7 +66,7 @@ async def searching_dislike(message: Message, state: FSMContext, bot: Bot):
     await message.answer(_(words.main_panel.search), reply_markup=search_panel())
     user, media = await UserQuery.select_partner(message.from_user.id, **data['search_cfg'])
     await user_info_sender(bot, user, media, message.chat.id)
-    await state.update_data(partner_user_id=user.tg_id)
+    await state.update_data(partner_user_id=user.tg_id, partner_lang=user.lang)
 
 
 @router.message(SearchPanel.search, F.text == '✉️')
@@ -93,7 +92,7 @@ async def cancel_send_message(message: Message, state: FSMContext, bot: Bot):
     await message.answer(_(words.main_panel.search), reply_markup=search_panel())
     await user_info_sender(bot, user, media, message.chat.id)
     await state.set_state(SearchPanel.search)
-    await state.update_data(partner_user_id=user.tg_id)
+    await state.update_data(partner_user_id=user.tg_id, partner_lang=user.lang)
 
 
 @router.message(SearchPanel.message, ~F.media_group_id)
@@ -102,27 +101,29 @@ async def get_message(message: Message, state: FSMContext, bot: Bot):
     content_type = message.content_type
     body = {'is_read': False,
             'sender': message.from_user.id,
-            'receiver': data['partner_user_id']}
+            'receiver': data['partner_user_id'],
+            'type': content_type}
     if content_type == ContentType.TEXT:
-        body.update({'type': 'text', 'message': message.text})
+        body['message'] = message.text
     elif content_type == ContentType.PHOTO:
-        body.update({'type': 'photo', 'message': message.photo[0].file_id})
+        body['message'] = message.photo[0].file_id
     elif content_type == ContentType.VIDEO:
-        body.update({'type': 'video', 'message': message.video.file_id})
-    elif content_type == ContentType.VOICE:
-        body.update({'type': 'audio', 'message': message.voice.file_id})
+        body['message'] = message.video.file_id
     elif content_type == ContentType.ANIMATION:
-        body.update({'type': 'animation', 'message': message.document.file_id})
+        body['message'] = message.document.file_id
+    elif content_type == ContentType.VOICE:
+        body['message'] = message.voice.file_id
+    elif content_type == ContentType.VIDEO_NOTE:
+        body['message'] = message.document.file_id
     else:
         return
     await InboxQuery.create(**body)
     await message.answer('📨🚀', reply_markup=search_panel())
-    if data['partner_user_id'] > 1_000_000:
-        await bot.send_message(data['partner_user_id'], _(words.inbox.inbox_notif))
+    await bot.send_message(data['partner_user_id'], _(words.inbox.inbox_notif, locale=data['partner_lang']))
     user, media = await UserQuery.select_partner(message.from_user.id, **data['search_cfg'])
     await user_info_sender(bot, user, media, message.chat.id)
     await state.set_state(SearchPanel.search)
-    await state.update_data(partner_user_id=user.tg_id)
+    await state.update_data(partner_user_id=user.tg_id, partner_lang=user.lang)
 
 
 @router.message(SearchPanel.report)
@@ -149,4 +150,4 @@ async def get_report(message: Message, state: FSMContext, bot: Bot):
     user, media = await UserQuery.select_partner(message.from_user.id, **data['search_cfg'])
     await user_info_sender(bot, user, media, message.chat.id)
     await state.set_state(SearchPanel.search)
-    await state.update_data(partner_user_id=user.tg_id)
+    await state.update_data(partner_user_id=user.tg_id, partner_lang=user.lang)

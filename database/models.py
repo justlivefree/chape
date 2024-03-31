@@ -45,9 +45,11 @@ class User(Base, BaseModel):
     lang = Column(String(5))
     locale = Column(String(5))
     city = Column(String(255), nullable=True)
+    state = Column(String(255), nullable=True)
     country = Column(String(255))
-    lat = Column(Float, nullable=True)
-    lon = Column(Float, nullable=True)
+    lat = Column(Float)
+    lon = Column(Float)
+    is_exact = Column(Boolean, default=False)
 
     # ----
     views = Column(Integer, default=0)

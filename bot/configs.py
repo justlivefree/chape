@@ -1,9 +1,11 @@
 from pathlib import Path
 
 from aiogram.utils.i18n import I18n
+from googletrans import Translator
 
 BASE_DIR = Path(__file__).parent.parent
 i18n = I18n(path=BASE_DIR / 'locales', domain='chape_bot')
+translator = Translator()
 
 
 def _(val):
@@ -57,14 +59,19 @@ class words:
     activate = _('Activate💡')
     deactivate_msg = _('Your account deactivated')
     sender_profile = _('Sender profile')
+    cmd_start = _('Start and restart bot')
+    cmd_help = _('Help for using')
+    cmd_admin = _('Send message to admin')
 
     class errors:
+        server_error = _('Server error. Try again')
         type_number = _('Write number')
         send_one_media = _('Send only photo or video')
         age_range = _('Your age does not apply for policy')
         blocked = _('You have been blocked for %s days')
         deactivated = _('You deactivated. Click button below for activation')
         private_profile = _('Bot can\'t send user\'s profile, cause account is private')
+        location_not_found = _('The sent address was not found. Try again')
 
     class signup:
         choose_lang = _('Choose language:')
@@ -73,7 +80,7 @@ class words:
         name = _('Name:')
         age = _('Age:')
         gender = type('gender', (), {'title': _('Gender:'), 'male': _('Male🙋‍♂️'), 'female': _('Female‍🙋‍♀️')})
-        location = _('Location:')
+        location = _('Send location or city with country name together')
         bio = _('Write about yourself:')
         info_choice = _('Choose your interests, it helps to make better conversation')
         choose = _('Choose:')

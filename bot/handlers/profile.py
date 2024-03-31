@@ -3,7 +3,8 @@ from typing import Dict
 from aiogram import F, Bot, Router
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery, ReplyKeyboardRemove
-from aiogram.utils.i18n import gettext as _
+from aiogram.utils.i18n import gettext as _, lazy_gettext as __
+from geopy.exc import GeocoderTimedOut
 
 from database.orm import UserQuery
 from ..configs import words
@@ -12,7 +13,7 @@ from ..keyboards.profile import profile
 from ..keyboards.signup import interests_panel
 from ..middlewares import i18n_middleware, media_middleware
 from ..states import UserPanel, ProfileSettings
-from ..utils import get_location_data
+from ..utils import get_location_data, check_location
 
 router = Router()
 
@@ -108,19 +109,32 @@ async def change_location(message: Message, state: FSMContext):
     lat, lon = message.location.latitude, message.location.longitude
     try:
         loc = await get_location_data(lat, lon)
-        result = {'lat': lat, 'lon': lon, 'city': loc.get('city'), 'country': loc['country']}
-    except AttributeError:
-        return
-    await UserQuery.update(message.from_user.id, **result)
+        await UserQuery.update(message.from_user.id, **loc)
+        await state.set_state(UserPanel.profile)
+        await message.answer('✅', reply_markup=profile())
+    except (AttributeError, KeyError):
+        await message.answer(_(words.errors.location_not_found))
+    except GeocoderTimedOut:
+        await message.answer(_(words.errors.server_error))
+
+
+@router.message(ProfileSettings.change_loc, F.text == __(words.cancel))
+async def change_location_cancel(message: Message, state: FSMContext):
     await state.set_state(UserPanel.profile)
-    await message.answer('✅', reply_markup=profile())
+    await message.answer(_(words.main_panel.profile), reply_markup=profile())
 
 
 @router.message(ProfileSettings.change_loc, F.text)
-async def change_location_cancel(message: Message, state: FSMContext):
-    if message.text == _(words.cancel):
+async def change_location_orientation(message: Message, state: FSMContext):
+    try:
+        loc = await check_location(message.text)
+        await UserQuery.update(message.from_user.id, **loc)
         await state.set_state(UserPanel.profile)
-        await message.answer(_(words.main_panel.profile), reply_markup=profile())
+        await message.answer('✅', reply_markup=profile())
+    except (AttributeError, KeyError):
+        await message.answer(_(words.errors.location_not_found))
+    except GeocoderTimedOut:
+        await message.answer(_(words.errors.server_error))
 
 
 @router.callback_query(ProfileSettings.change_lang)

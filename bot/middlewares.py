@@ -77,6 +77,16 @@ class LangMiddleware(FSMI18nMiddleware):
         return locale
 
 
+class IsAuthMiddleware(BaseMiddleware):
+    async def __call__(
+            self,
+            handler: Callable[[Message, Dict[str, Any]], Awaitable[Any]],
+            event: Message,
+            data: Dict[str, Any]
+    ) -> Any:
+        pass
+
+
 media_middleware = MediaGroupMiddleware(latency=0.5)
 i18n_middleware = LangMiddleware(i18n=i18n, key='lang')
 private_chat_middleware = PrivateChatMiddleware()

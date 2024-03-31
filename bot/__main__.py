@@ -6,15 +6,15 @@ from os import getenv
 from aiogram import Bot
 from aiogram.enums import ParseMode
 
-from database.orm import DBQuery
-from .dispatcher import get_dispatcher
+from bot.dispatcher import get_dispatcher
+from bot.utils import get_bot_commands
 
 
 async def main():
-    await DBQuery.create_tables()
     TOKEN = getenv("BOT_TOKEN")
     dp = get_dispatcher()
     bot = Bot(TOKEN, parse_mode=ParseMode.HTML)
+    await bot.set_my_commands(get_bot_commands())
     await dp.start_polling(bot)
 
 

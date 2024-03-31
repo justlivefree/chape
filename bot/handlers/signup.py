@@ -5,6 +5,7 @@ from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, CallbackQuery
 from aiogram.types import ReplyKeyboardMarkup, KeyboardButton, ReplyKeyboardRemove
 from aiogram.utils.i18n import gettext as _
+from geopy.exc import GeocoderTimedOut
 
 from database.models import Gender
 from database.orm import UserQuery
@@ -13,7 +14,7 @@ from ..keyboards.base import main_menu, location_kb, agree_disagree
 from ..keyboards.signup import interests_panel
 from ..middlewares import MediaGroupMiddleware, media_middleware, i18n_middleware
 from ..states import SignupState, UserPanel
-from ..utils import get_location_data
+from ..utils import get_location_data, check_location
 
 router = Router()
 router.message.middleware(media_middleware)
@@ -103,14 +104,28 @@ async def get_bio(message: Message, state: FSMContext):
 
 @router.message(SignupState.location, F.location)
 async def get_location(message: Message, state: FSMContext):
-    lat, lon = message.location.latitude, message.location.longitude
     try:
-        loc = await get_location_data(lat, lon)
-        await state.update_data(**{'lat': lat, 'lon': lon, 'city': loc.get('city'), 'country': loc['country']})
-    except AttributeError:
-        return
-    await state.set_state(SignupState.media)
-    await message.answer(_(words.signup.media), reply_markup=ReplyKeyboardRemove())
+        loc = await get_location_data(message.location.latitude, message.location.longitude)
+        await state.update_data(**loc)
+        await state.set_state(SignupState.media)
+        await message.answer(_(words.signup.media), reply_markup=ReplyKeyboardRemove())
+    except (AttributeError, KeyError):
+        await message.answer(_(words.errors.location_not_found))
+    except GeocoderTimedOut:
+        await message.answer(_(words.errors.server_error))
+
+
+@router.message(SignupState.location, F.text)
+async def get_location_orientation(message: Message, state: FSMContext):
+    try:
+        loc = await check_location(message.text)
+        await state.update_data(**loc)
+        await state.set_state(SignupState.media)
+        await message.answer(_(words.signup.media), reply_markup=ReplyKeyboardRemove())
+    except (AttributeError, KeyError):
+        await message.answer(_(words.errors.location_not_found))
+    except GeocoderTimedOut:
+        await message.answer(_(words.errors.server_error))
 
 
 @router.message(SignupState.media, ~F.media_group_id & (F.photo | F.video))

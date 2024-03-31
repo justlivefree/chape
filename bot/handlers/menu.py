@@ -1,4 +1,5 @@
 from aiogram import Bot, Router
+from aiogram.enums import ContentType
 from aiogram.fsm.context import FSMContext
 from aiogram.types import Message, ReplyKeyboardRemove
 from aiogram.utils.i18n import gettext as _
@@ -42,13 +43,17 @@ async def main_menu(message: Message, state: FSMContext, bot: Bot):
                 elif msg_type == 'reply':
                     await bot.send_message(message.chat.id, _(words.inbox.reply_notif),
                                            reply_markup=inbox_reply_panel(msg['sender'], sender.username))
-                elif msg_type == 'photo':
+                elif msg_type == ContentType.TEXT:
+                    await bot.send_message(message.chat.id, f'✉️: {inbox_message}', reply_markup=msg_btn)
+                elif msg_type == ContentType.PHOTO:
                     await bot.send_photo(message.chat.id, inbox_message, reply_markup=msg_btn)
-                elif msg_type == 'video':
+                elif msg_type == ContentType.VIDEO:
                     await bot.send_video(message.chat.id, inbox_message, reply_markup=msg_btn)
-                elif msg_type == 'audio':
+                elif msg_type == ContentType.VOICE:
                     await bot.send_voice(message.chat.id, inbox_message, reply_markup=msg_btn)
-                elif msg_type == 'animation':
+                elif msg_type == ContentType.VIDEO_NOTE:
+                    await bot.send_video_note(message.chat.id, inbox_message, reply_markup=msg_btn)
+                else:
                     await bot.send_animation(message.chat.id, inbox_message, reply_markup=msg_btn)
             await InboxQuery.make_messages_read(message.from_user.id)
     elif message.text == _(words.main_panel.profile):
